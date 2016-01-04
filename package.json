@@ -1,6 +1,6 @@
 {
   "name": "rxjs-massive",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Massive.js wrapper for Rx",
   "scripts": {
     "start": "node dist/rxjs-massive.js",
