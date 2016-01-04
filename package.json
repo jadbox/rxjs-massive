@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "massive": "^2.1.0",
-    "node-lambda": "^0.7.1",
     "rx": "^4.0.7",
     "webpack": "^1.12.9"
   },
