@@ -2,8 +2,8 @@ const rx = global.Rx || require('rx');
 const rxo = rx.Observable;
 const massive = require("massive");
 
-function cb(f, target) {
-  return rxo.fromNodeCallback(f, target);
+function cb(f, ...args) {
+  return rxo.defer(_ => rxo.fromNodeCallback(f)(...args));
 }
 
 function upsertDoc(_this, table, searchFor, val) {
@@ -22,33 +22,39 @@ searchDoc({
 
 function rxify(db) {
   const api = {
-    run: rxo.fromNodeCallback(db.run, db),
-    save: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db.save, db)(table, ...args)),
-    saveDoc: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db.saveDoc, db)(table, ...args)),
-    destroy: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].destroy, db[table])(...args)),
-    searchDoc: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].searchDoc, db[table])(...args)),
-    find: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].find, db[table])(...args)),
-    findDoc: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findDoc, db[table])(...args)),
-    where: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].where, db[table])(...args)),
-    findOne: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findOne, db[table])(...args)),
-    upsertDoc: (table, searchFor, default_val) => upsertDoc(api, table, searchFor, default_val),
-    fromTable: table => ({
-      save: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db.save, db)(table, ...args)),
-      saveDoc: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db.saveDoc, db)(table, ...args)),
-      destroy: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].destroy, db[table])(...args)),
-      searchDoc: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].searchDoc, db[table])(...args)),
-      find: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].find, db[table])(...args)),
-      findDoc: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findDoc, db[table])(...args)),
-      where: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].where, db[table])(...args)),
-      findOne: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findOne, db[table])(...args)),
-      upsertDoc: (searchFor, default_val) => upsertDoc(api, table, searchFor, default_val)
-    })
+    db: db,
+    run: (...args) => cb(::db.run, ...args),
+    save: (...args) => cb(::db.save, ...args),
+    saveDoc: (...args) => cb(::db.saveDoc, ...args),
+    destroy: (table, ...args) => cb(::db[table].destroy, ...args),
+    searchDoc: (table, ...args) => cb(::db[table].searchDoc, ...args),
+    find: (table, ...args) => cb(::db[table].find, ...args),
+    findDoc: (table, ...args) => cb(::db[table].findDoc, ...args),
+    where: (table, ...args) => cb(::db[table].where, ...args),
+    findOne: (table, ...args) => cb(::db[table].findOne, ...args),
+    update: (table, ...args) => cb(::db[table].update, ...args),
+    //upsertDoc: (table, searchFor, default_val) => upsertDoc(api, table, searchFor, default_val),
+    
+    fromTable: (schema, table) => ({
+        db: db,
+        save: (...args) => cb(::db[schema][table].save, ...args),
+        saveDoc: (...args) => cb(::db[schema][table].saveDoc, ...args),
+        destroy: (...args) => cb(::db[schema][table].destroy, ...args),
+        searchDoc: (...args) => cb(::db[schema][table].searchDoc, ...args),
+        update: (...args) => cb(::db[schema][table].update, ...args),
+        find: (...args) => cb(::db[schema][table].find, ...args),
+        findDoc: (...args) => cb(::db[schema][table].findDoc, ...args),
+        where: (...args) => cb(::db[schema][table].where, ...args),
+        findOne: (...args) => cb(::db[schema][table].findOne, ...args)
+        //upsertDoc: (searchFor, default_val) => upsertDoc(api, table, searchFor, default_val)
+      })
   };
   return api;
 }
 
 export function connectSync(opt) {
   const db = massive.connectSync(opt);
+  //console.log(db);
   return new rxify(db);
 }
 
