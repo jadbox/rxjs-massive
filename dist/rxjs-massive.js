@@ -61,6 +61,19 @@ require("source-map-support").install();
 	  return rxo.fromNodeCallback(f, target);
 	}
 	
+	function _upsertDoc(_this, table, val, searchFor) {
+	  return _this.searchDoc(table, searchFor).flatMap(function (x) {
+	    return x === null || x.length === 0 ? _this.saveDoc(table, val) : rxo.just(x);
+	  });
+	}
+	
+	/*
+	searchDoc({
+	  keys : ["title", "description"],
+	  term : "Kauai"
+	}
+	*/
+	
 	function rxify(db) {
 	  var api = {
 	    run: rxo.fromNodeCallback(db.run, db),
@@ -119,6 +132,9 @@ require("source-map-support").install();
 	      return rxo.defer(function (_) {
 	        return rxo.fromNodeCallback(db[table].findOne, db[table]).apply(undefined, args);
 	      });
+	    },
+	    upsertDoc: function upsertDoc(table, default_val, searchFor) {
+	      return _upsertDoc(api, table, default_val, searchFor);
 	    },
 	    fromTable: function fromTable(table) {
 	      return {
@@ -189,6 +205,9 @@ require("source-map-support").install();
 	          return rxo.defer(function (_) {
 	            return rxo.fromNodeCallback(db[table].findOne, db[table]).apply(undefined, args);
 	          });
+	        },
+	        upsertDoc: function upsertDoc(default_val, searchFor) {
+	          return _upsertDoc(api, table, default_val, searchFor);
 	        }
 	      };
 	    }
