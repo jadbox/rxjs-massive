@@ -2,41 +2,41 @@ require("source-map-support").install();
 (function(e, a) { for(var i in a) e[i] = a[i]; }(exports, /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -45,19 +45,184 @@ require("source-map-support").install();
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	eval("'use strict';\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nexports.connectSync = connectSync;\nexports.connect = connect;\nexports.connectMassive = connectMassive;\n\nfunction _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }\n\nvar rx = global.Rx || __webpack_require__(1);\nvar rxo = rx.Observable;\nvar massive = __webpack_require__(2);\n\nfunction rxify(db) {\n  return {\n    run: rxo.fromNodeCallback(db.run, db),\n    saveDoc: rxo.fromNodeCallback(db.saveDoc, db),\n    destroy: function destroy(table) {\n      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {\n        args[_key - 1] = arguments[_key];\n      }\n\n      return rxo.fromNodeCallback(db[table].destroy, db[table]).apply(undefined, args);\n    },\n    searchDoc: function searchDoc(table) {\n      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {\n        args[_key2 - 1] = arguments[_key2];\n      }\n\n      return rxo.fromNodeCallback(db[table].searchDoc, db[table]).apply(undefined, args);\n    },\n    find: function find(table) {\n      for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {\n        args[_key3 - 1] = arguments[_key3];\n      }\n\n      return rxo.fromNodeCallback(db[table].find, db[table]).apply(undefined, args);\n    },\n    findDoc: function findDoc(table) {\n      for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {\n        args[_key4 - 1] = arguments[_key4];\n      }\n\n      return rxo.fromNodeCallback(db[table].findDoc, db[table]).apply(undefined, args);\n    },\n    where: function where(table) {\n      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {\n        args[_key5 - 1] = arguments[_key5];\n      }\n\n      return rxo.fromNodeCallback(db[table].where, db[table]).apply(undefined, args);\n    },\n    findOne: function findOne(table) {\n      for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {\n        args[_key6 - 1] = arguments[_key6];\n      }\n\n      return rxo.fromNodeCallback(db[table].findOne, db[table]).apply(undefined, args);\n    },\n    save: function save(table) {\n      for (var _len7 = arguments.length, args = Array(_len7 > 1 ? _len7 - 1 : 0), _key7 = 1; _key7 < _len7; _key7++) {\n        args[_key7 - 1] = arguments[_key7];\n      }\n\n      return rxo.fromNodeCallback(db[table].save, db[table]).apply(undefined, args);\n    },\n    setTable: function setTable(table) {\n      return {\n        destroy: rxo.fromNodeCallback(db[table].destroy, db[table]),\n        searchDoc: rxo.fromNodeCallback(db[table].searchDoc, db[table]),\n        find: rxo.fromNodeCallback(db[table].find, db[table]),\n        findDoc: rxo.fromNodeCallback(db[table].findDoc, db[table]),\n        where: rxo.fromNodeCallback(db[table].where, db[table]).apply(undefined, _toConsumableArray(args)),\n        findOne: rxo.fromNodeCallback(db[table].findOne, db[table]),\n        save: rxo.fromNodeCallback(db[table].save, db[table])\n      };\n    }\n  };\n}\n\nfunction connectSync(opt) {\n  var db = massive.connectSync(opt);\n  return new rxify(db);\n}\n\nfunction connect(opt) {\n  var connect = rxo.fromNodeCallback(massive.connect, massive);\n  return connect(opt).map(rxify);\n}\n\nfunction connectMassive(db) {\n  if (!db) throw new Error('db parameter not set');\n  return new rxify(db);\n}\n//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvaW5kZXguanM/OTU1MiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztRQTJCZ0IsV0FBVyxHQUFYLFdBQVc7UUFLWCxPQUFPLEdBQVAsT0FBTztRQUtQLGNBQWMsR0FBZCxjQUFjOzs7O0FBckM5QixJQUFNLEVBQUUsR0FBRyxNQUFNLENBQUMsRUFBRSxJQUFJLG1CQUFPLENBQUMsQ0FBSSxDQUFDLENBQUM7QUFDdEMsSUFBTSxHQUFHLEdBQUcsRUFBRSxDQUFDLFVBQVUsQ0FBQztBQUMxQixJQUFNLE9BQU8sR0FBRyxtQkFBTyxDQUFDLENBQVMsQ0FBQyxDQUFDOztBQUVuQyxTQUFTLEtBQUssQ0FBQyxFQUFFLEVBQUU7QUFDakIsU0FBTztBQUNMLE9BQUcsRUFBRSxHQUFHLENBQUMsZ0JBQWdCLENBQUMsRUFBRSxDQUFDLEdBQUcsRUFBRSxFQUFFLENBQUM7QUFDckMsV0FBTyxFQUFFLEdBQUcsQ0FBQyxnQkFBZ0IsQ0FBQyxFQUFFLENBQUMsT0FBTyxFQUFFLEVBQUUsQ0FBQztBQUM3QyxXQUFPLEVBQUUsaUJBQUMsS0FBSzt3Q0FBSyxJQUFJO0FBQUosWUFBSTs7O2FBQUssR0FBRyxDQUFDLGdCQUFnQixDQUFDLEVBQUUsQ0FBQyxLQUFLLENBQUMsQ0FBQyxPQUFPLEVBQUUsRUFBRSxDQUFDLEtBQUssQ0FBQyxDQUFDLGtCQUFJLElBQUksQ0FBQztLQUFBO0FBQ3hGLGFBQVMsRUFBRSxtQkFBQyxLQUFLO3lDQUFLLElBQUk7QUFBSixZQUFJOzs7YUFBSyxHQUFHLENBQUMsZ0JBQWdCLENBQUMsRUFBRSxDQUFDLEtBQUssQ0FBQyxDQUFDLFNBQVMsRUFBRSxFQUFFLENBQUMsS0FBSyxDQUFDLENBQUMsa0JBQUksSUFBSSxDQUFDO0tBQUE7QUFDNUYsUUFBSSxFQUFFLGNBQUMsS0FBSzt5Q0FBSyxJQUFJO0FBQUosWUFBSTs7O2FBQUssR0FBRyxDQUFDLGdCQUFnQixDQUFDLEVBQUUsQ0FBQyxLQUFLLENBQUMsQ0FB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LE1BQU0sSUFBSSxLQUFLLENBQUMsc0JBQXNCLENBQUMsQ0FBQztBQUNoRCxTQUFPLElBQUksS0FBSyxDQUFDLEVBQUUsQ0FBQyxDQUFDIiwiZmlsZSI6IjAuanMiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCByeCA9IGdsb2JhbC5SeCB8fCByZXF1aXJlKCdyeCcpO1xuY29uc3QgcnhvID0gcnguT2JzZXJ2YWJsZTtcbmNvbnN0IG1hc3NpdmUgPSByZXF1aXJlKFwibWFzc2l2ZVwiKTtcblxuZnVuY3Rpb24gcnhpZnkoZGIpIHtcbiAgcmV0dXJuIHtcbiAgICBydW46IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiLnJ1biwgZGIpLFxuICAgIHNhdmVEb2M6IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiLnNhdmVEb2MsIGRiKSxcbiAgICBkZXN0cm95OiAodGFibGUsIC4uLmFyZ3MpID0+IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiW3RhYmxlXS5kZXN0cm95LCBkYlt0YWJsZV0pKC4uLmFyZ3MpLFxuICAgIHNlYXJjaERvYzogKHRhYmxlLCAuLi5hcmdzKSA9PiByeG8uZnJvbU5vZGVDYWxsYmFjayhkYlt0YWJsZV0uc2VhcmNoRG9jLCBkYlt0YWJsZV0pKC4uLmFyZ3MpLFxuICAgIGZpbmQ6ICh0YWJsZSwgLi4uYXJncykgPT4gcnhvLmZyb21Ob2RlQ2FsbGJhY2soZGJbdGFibGVdLmZpbmQsIGRiW3RhYmxlXSkoLi4uYXJncyksXG4gICAgZmluZERvYzogKHRhYmxlLCAuLi5hcmdzKSA9PiByeG8uZnJvbU5vZGVDYWxsYmFjayhkYlt0YWJsZV0uZmluZERvYywgZGJbdGFibGVdKSguLi5hcmdzKSxcbiAgICB3aGVyZTogKHRhYmxlLCAuLi5hcmdzKSA9PiByeG8uZnJvbU5vZGVDYWxsYmFjayhkYlt0YWJsZV0ud2hlcmUsIGRiW3RhYmxlXSkoLi4uYXJncyksXG4gICAgZmluZE9uZTogKHRhYmxlLCAuLi5hcmdzKSA9PiByeG8uZnJvbU5vZGVDYWxsYmFjayhkYlt0YWJsZV0uZmluZE9uZSwgZGJbdGFibGVdKSguLi5hcmdzKSxcbiAgICBzYXZlOiAodGFibGUsIC4uLmFyZ3MpID0+IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiW3RhYmxlXS5zYXZlLCBkYlt0YWJsZV0pKC4uLmFyZ3MpLFxuICAgIHNldFRhYmxlOiB0YWJsZSA9PiAoe1xuICAgICAgZGVzdHJveTogcnhvLmZyb21Ob2RlQ2FsbGJhY2soZGJbdGFibGVdLmRlc3Ryb3ksIGRiW3RhYmxlXSksXG4gICAgICBzZWFyY2hEb2M6IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiW3RhYmxlXS5zZWFyY2hEb2MsIGRiW3RhYmxlXSksXG4gICAgICBmaW5kOiByeG8uZnJvbU5vZGVDYWxsYmFjayhkYlt0YWJsZV0uZmluZCwgZGJbdGFibGVdKSxcbiAgICAgIGZpbmREb2M6IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiW3RhYmxlXS5maW5kRG9jLCBkYlt0YWJsZV0pLFxuICAgICAgd2hlcmU6IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiW3RhYmxlXS53aGVyZSwgZGJbdGFibGVdKSguLi5hcmdzKSxcbiAgICAgIGZpbmRPbmU6IHJ4by5mcm9tTm9kZUNhbGxiYWNrKGRiW3RhYmxlXS5maW5kT25lLCBkYlt0YWJsZV0pLFxuICAgICAgc2F2ZTogcnhvLmZyb21Ob2RlQ2FsbGJhY2soZGJbdGFibGVdLnNhdmUsIGRiW3RhYmxlXSlcbiAgICB9KVxuICB9XG59XG5cbmV4cG9ydCBmdW5jdGlvbiBjb25uZWN0U3luYyhvcHQpIHtcbiAgY29uc3QgZGIgPSBtYXNzaXZlLmNvbm5lY3RTeW5jKG9wdCk7XG4gIHJldHVybiBuZXcgcnhpZnkoZGIpO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gY29ubmVjdChvcHQpIHtcbiAgY29uc3QgY29ubmVjdCA9IHJ4by5mcm9tTm9kZUNhbGxiYWNrKG1hc3NpdmUuY29ubmVjdCwgbWFzc2l2ZSlcbiAgcmV0dXJuIGNvbm5lY3Qob3B0KS5tYXAocnhpZnkpO1xufVxuXG5leHBvcnQgZnVuY3Rpb24gY29ubmVjdE1hc3NpdmUoZGIpIHtcbiAgaWYoIWRiKSB0aHJvdyBuZXcgRXJyb3IoJ2RiIHBhcmFtZXRlciBub3Qgc2V0Jyk7XG4gIHJldHVybiBuZXcgcnhpZnkoZGIpO1xufVxuXG5cblxuLyoqIFdFQlBBQ0sgRk9PVEVSICoqXG4gKiogLi9zcmMvaW5kZXguanNcbiAqKi8iXSwic291cmNlUm9vdCI6IiJ9");
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.connectSync = connectSync;
+	exports.connect = connect;
+	exports.connectMassive = connectMassive;
+	var rx = global.Rx || __webpack_require__(1);
+	var rxo = rx.Observable;
+	var massive = __webpack_require__(2);
+	
+	function cb(f, target) {
+	  return rxo.fromNodeCallback(f, target);
+	}
+	
+	function rxify(db) {
+	  var api = {
+	    run: rxo.fromNodeCallback(db.run, db),
+	    save: rxo.fromNodeCallback(db.save, db),
+	    saveDoc: rxo.fromNodeCallback(db.saveDoc, db),
+	    destroy: function destroy(table) {
+	      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	        args[_key - 1] = arguments[_key];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db[table].destroy, db[table]).apply(undefined, args);
+	      });
+	    },
+	    searchDoc: function searchDoc(table) {
+	      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	        args[_key2 - 1] = arguments[_key2];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db[table].searchDoc, db[table]).apply(undefined, args);
+	      });
+	    },
+	    find: function find(table) {
+	      for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+	        args[_key3 - 1] = arguments[_key3];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db[table].find, db[table]).apply(undefined, args);
+	      });
+	    },
+	    findDoc: function findDoc(table) {
+	      for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+	        args[_key4 - 1] = arguments[_key4];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db[table].findDoc, db[table]).apply(undefined, args);
+	      });
+	    },
+	    where: function where(table) {
+	      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+	        args[_key5 - 1] = arguments[_key5];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db[table].where, db[table]).apply(undefined, args);
+	      });
+	    },
+	    findOne: function findOne(table) {
+	      for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+	        args[_key6 - 1] = arguments[_key6];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db[table].findOne, db[table]).apply(undefined, args);
+	      });
+	    },
+	    fromTable: function fromTable(table) {
+	      return {
+	        save: function save() {
+	          for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+	            args[_key7] = arguments[_key7];
+	          }
+	
+	          return rxo.fromNodeCallback(db.save, db).apply(undefined, [table].concat(args));
+	        },
+	        saveDoc: function saveDoc() {
+	          for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+	            args[_key8] = arguments[_key8];
+	          }
+	
+	          return rxo.fromNodeCallback(db.saveDoc, db).apply(undefined, [table].concat(args));
+	        },
+	        destroy: function destroy() {
+	          for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+	            args[_key9] = arguments[_key9];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db[table].destroy, db[table]).apply(undefined, args);
+	          });
+	        },
+	        searchDoc: function searchDoc() {
+	          for (var _len10 = arguments.length, args = Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
+	            args[_key10] = arguments[_key10];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db[table].searchDoc, db[table]).apply(undefined, args);
+	          });
+	        },
+	        find: function find() {
+	          for (var _len11 = arguments.length, args = Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
+	            args[_key11] = arguments[_key11];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db[table].find, db[table]).apply(undefined, args);
+	          });
+	        },
+	        findDoc: function findDoc() {
+	          for (var _len12 = arguments.length, args = Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
+	            args[_key12] = arguments[_key12];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db[table].findDoc, db[table]).apply(undefined, args);
+	          });
+	        },
+	        where: function where() {
+	          for (var _len13 = arguments.length, args = Array(_len13), _key13 = 0; _key13 < _len13; _key13++) {
+	            args[_key13] = arguments[_key13];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db[table].where, db[table]).apply(undefined, args);
+	          });
+	        },
+	        findOne: function findOne() {
+	          for (var _len14 = arguments.length, args = Array(_len14), _key14 = 0; _key14 < _len14; _key14++) {
+	            args[_key14] = arguments[_key14];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db[table].findOne, db[table]).apply(undefined, args);
+	          });
+	        }
+	      };
+	    }
+	  };
+	  return api;
+	}
+	
+	function connectSync(opt) {
+	  var db = massive.connectSync(opt);
+	  return new rxify(db);
+	}
+	
+	function connect(opt) {
+	  var connect = rxo.fromNodeCallback(massive.connect, massive);
+	  return connect(opt).map(rxify);
+	}
+	
+	function connectMassive(db) {
+	  if (!db) throw new Error('db parameter not set');
+	  return new rxify(db);
+	}
 
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
 
-	eval("module.exports = require(\"rx\");\n//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vZXh0ZXJuYWwgXCJyeFwiPzYxMTciXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEiLCJmaWxlIjoiMS5qcyIsInNvdXJjZXNDb250ZW50IjpbIm1vZHVsZS5leHBvcnRzID0gcmVxdWlyZShcInJ4XCIpO1xuXG5cbi8qKioqKioqKioqKioqKioqKlxuICoqIFdFQlBBQ0sgRk9PVEVSXG4gKiogZXh0ZXJuYWwgXCJyeFwiXG4gKiogbW9kdWxlIGlkID0gMVxuICoqIG1vZHVsZSBjaHVua3MgPSAwXG4gKiovIl0sInNvdXJjZVJvb3QiOiIifQ==");
+	module.exports = require("rx");
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	eval("module.exports = require(\"massive\");\n//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vZXh0ZXJuYWwgXCJtYXNzaXZlXCI/NDExNiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSIsImZpbGUiOiIyLmpzIiwic291cmNlc0NvbnRlbnQiOlsibW9kdWxlLmV4cG9ydHMgPSByZXF1aXJlKFwibWFzc2l2ZVwiKTtcblxuXG4vKioqKioqKioqKioqKioqKipcbiAqKiBXRUJQQUNLIEZPT1RFUlxuICoqIGV4dGVybmFsIFwibWFzc2l2ZVwiXG4gKiogbW9kdWxlIGlkID0gMlxuICoqIG1vZHVsZSBjaHVua3MgPSAwXG4gKiovIl0sInNvdXJjZVJvb3QiOiIifQ==");
+	module.exports = require("massive");
 
 /***/ }
 /******/ ])));
+//# sourceMappingURL=rxjs-massive.js.map

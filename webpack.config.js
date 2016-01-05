@@ -48,6 +48,6 @@ module.exports = {
                              { raw: true, entryOnly: false })
     ],
     externals: nodeModules,
-    devtool: '#eval-source-map',
+    devtool: '#source-map',
     debug: true
 }
