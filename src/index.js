@@ -26,6 +26,7 @@ function rxify(db) {
     run: (...args) => cb(::db.run, ...args),
     save: (...args) => cb(::db.save, ...args),
     saveDoc: (...args) => cb(::db.saveDoc, ...args),
+    insert: (table, ...args) => cb(::db[table].insert, ...args),
     destroy: (table, ...args) => cb(::db[table].destroy, ...args),
     searchDoc: (table, ...args) => cb(::db[table].searchDoc, ...args),
     find: (table, ...args) => cb(::db[table].find, ...args),
@@ -33,11 +34,11 @@ function rxify(db) {
     where: (table, ...args) => cb(::db[table].where, ...args),
     findOne: (table, ...args) => cb(::db[table].findOne, ...args),
     update: (table, ...args) => cb(::db[table].update, ...args),
-    //upsertDoc: (table, searchFor, default_val) => upsertDoc(api, table, searchFor, default_val),
     
     fromTable: (schema, table) => ({
         db: db,
         save: (...args) => cb(::db[schema][table].save, ...args),
+        insert: (...args) => cb(::db[schema][table].insert, ...args),
         saveDoc: (...args) => cb(::db[schema][table].saveDoc, ...args),
         destroy: (...args) => cb(::db[schema][table].destroy, ...args),
         searchDoc: (...args) => cb(::db[schema][table].searchDoc, ...args),
@@ -46,7 +47,6 @@ function rxify(db) {
         findDoc: (...args) => cb(::db[schema][table].findDoc, ...args),
         where: (...args) => cb(::db[schema][table].where, ...args),
         findOne: (...args) => cb(::db[schema][table].findOne, ...args)
-        //upsertDoc: (searchFor, default_val) => upsertDoc(api, table, searchFor, default_val)
       })
   };
   return api;
