@@ -61,7 +61,7 @@ require("source-map-support").install();
 	  return rxo.fromNodeCallback(f, target);
 	}
 	
-	function _upsertDoc(_this, table, val, searchFor) {
+	function _upsertDoc(_this, table, searchFor, val) {
 	  return _this.searchDoc(table, searchFor).flatMap(function (x) {
 	    return x === null || x.length === 0 ? _this.saveDoc(table, val) : rxo.just(x);
 	  });
@@ -133,8 +133,8 @@ require("source-map-support").install();
 	        return rxo.fromNodeCallback(db[table].findOne, db[table]).apply(undefined, args);
 	      });
 	    },
-	    upsertDoc: function upsertDoc(table, default_val, searchFor) {
-	      return _upsertDoc(api, table, default_val, searchFor);
+	    upsertDoc: function upsertDoc(table, searchFor, default_val) {
+	      return _upsertDoc(api, table, searchFor, default_val);
 	    },
 	    fromTable: function fromTable(table) {
 	      return {
@@ -206,8 +206,8 @@ require("source-map-support").install();
 	            return rxo.fromNodeCallback(db[table].findOne, db[table]).apply(undefined, args);
 	          });
 	        },
-	        upsertDoc: function upsertDoc(default_val, searchFor) {
-	          return _upsertDoc(api, table, default_val, searchFor);
+	        upsertDoc: function upsertDoc(searchFor, default_val) {
+	          return _upsertDoc(api, table, searchFor, default_val);
 	        }
 	      };
 	    }

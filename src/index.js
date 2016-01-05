@@ -6,7 +6,7 @@ function cb(f, target) {
   return rxo.fromNodeCallback(f, target);
 }
 
-function upsertDoc(_this, table, val, searchFor) {
+function upsertDoc(_this, table, searchFor, val) {
   return _this.searchDoc(table, searchFor).flatMap( x => 
       x===null || 
       (x.length===0) ? 
@@ -31,7 +31,7 @@ function rxify(db) {
     findDoc: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findDoc, db[table])(...args)),
     where: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].where, db[table])(...args)),
     findOne: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findOne, db[table])(...args)),
-    upsertDoc: (table, default_val, searchFor) => upsertDoc(api, table, default_val, searchFor),
+    upsertDoc: (table, searchFor, default_val) => upsertDoc(api, table, searchFor, default_val),
     fromTable: table => ({
       save: (...args) => rxo.fromNodeCallback(db.save, db)(table, ...args),
       saveDoc: (...args) => rxo.fromNodeCallback(db.saveDoc, db)(table, ...args),
@@ -41,7 +41,7 @@ function rxify(db) {
       findDoc: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findDoc, db[table])(...args)),
       where: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].where, db[table])(...args)),
       findOne: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findOne, db[table])(...args)),
-      upsertDoc: (default_val, searchFor) => upsertDoc(api, table, default_val, searchFor)
+      upsertDoc: (searchFor, default_val) => upsertDoc(api, table, searchFor, default_val)
     })
   };
   return api;
