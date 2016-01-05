@@ -23,8 +23,8 @@ searchDoc({
 function rxify(db) {
   const api = {
     run: rxo.fromNodeCallback(db.run, db),
-    save: rxo.fromNodeCallback(db.save, db),
-    saveDoc: rxo.fromNodeCallback(db.saveDoc, db),
+    save: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db.save, db)(table, ...args)),
+    saveDoc: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db.saveDoc, db)(table, ...args)),
     destroy: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].destroy, db[table])(...args)),
     searchDoc: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].searchDoc, db[table])(...args)),
     find: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].find, db[table])(...args)),
@@ -33,8 +33,8 @@ function rxify(db) {
     findOne: (table, ...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].findOne, db[table])(...args)),
     upsertDoc: (table, searchFor, default_val) => upsertDoc(api, table, searchFor, default_val),
     fromTable: table => ({
-      save: (...args) => rxo.fromNodeCallback(db.save, db)(table, ...args),
-      saveDoc: (...args) => rxo.fromNodeCallback(db.saveDoc, db)(table, ...args),
+      save: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db.save, db)(table, ...args)),
+      saveDoc: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db.saveDoc, db)(table, ...args)),
       destroy: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].destroy, db[table])(...args)),
       searchDoc: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].searchDoc, db[table])(...args)),
       find: (...args) => rxo.defer(_ => rxo.fromNodeCallback(db[table].find, db[table])(...args)),

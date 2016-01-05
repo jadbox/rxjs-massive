@@ -77,11 +77,27 @@ require("source-map-support").install();
 	function rxify(db) {
 	  var api = {
 	    run: rxo.fromNodeCallback(db.run, db),
-	    save: rxo.fromNodeCallback(db.save, db),
-	    saveDoc: rxo.fromNodeCallback(db.saveDoc, db),
-	    destroy: function destroy(table) {
+	    save: function save(table) {
 	      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	        args[_key - 1] = arguments[_key];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db.save, db).apply(undefined, [table].concat(args));
+	      });
+	    },
+	    saveDoc: function saveDoc(table) {
+	      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	        args[_key2 - 1] = arguments[_key2];
+	      }
+	
+	      return rxo.defer(function (_) {
+	        return rxo.fromNodeCallback(db.saveDoc, db).apply(undefined, [table].concat(args));
+	      });
+	    },
+	    destroy: function destroy(table) {
+	      for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+	        args[_key3 - 1] = arguments[_key3];
 	      }
 	
 	      return rxo.defer(function (_) {
@@ -89,8 +105,8 @@ require("source-map-support").install();
 	      });
 	    },
 	    searchDoc: function searchDoc(table) {
-	      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-	        args[_key2 - 1] = arguments[_key2];
+	      for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+	        args[_key4 - 1] = arguments[_key4];
 	      }
 	
 	      return rxo.defer(function (_) {
@@ -98,8 +114,8 @@ require("source-map-support").install();
 	      });
 	    },
 	    find: function find(table) {
-	      for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-	        args[_key3 - 1] = arguments[_key3];
+	      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+	        args[_key5 - 1] = arguments[_key5];
 	      }
 	
 	      return rxo.defer(function (_) {
@@ -107,8 +123,8 @@ require("source-map-support").install();
 	      });
 	    },
 	    findDoc: function findDoc(table) {
-	      for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-	        args[_key4 - 1] = arguments[_key4];
+	      for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+	        args[_key6 - 1] = arguments[_key6];
 	      }
 	
 	      return rxo.defer(function (_) {
@@ -116,8 +132,8 @@ require("source-map-support").install();
 	      });
 	    },
 	    where: function where(table) {
-	      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
-	        args[_key5 - 1] = arguments[_key5];
+	      for (var _len7 = arguments.length, args = Array(_len7 > 1 ? _len7 - 1 : 0), _key7 = 1; _key7 < _len7; _key7++) {
+	        args[_key7 - 1] = arguments[_key7];
 	      }
 	
 	      return rxo.defer(function (_) {
@@ -125,8 +141,8 @@ require("source-map-support").install();
 	      });
 	    },
 	    findOne: function findOne(table) {
-	      for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
-	        args[_key6 - 1] = arguments[_key6];
+	      for (var _len8 = arguments.length, args = Array(_len8 > 1 ? _len8 - 1 : 0), _key8 = 1; _key8 < _len8; _key8++) {
+	        args[_key8 - 1] = arguments[_key8];
 	      }
 	
 	      return rxo.defer(function (_) {
@@ -139,22 +155,26 @@ require("source-map-support").install();
 	    fromTable: function fromTable(table) {
 	      return {
 	        save: function save() {
-	          for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
-	            args[_key7] = arguments[_key7];
-	          }
-	
-	          return rxo.fromNodeCallback(db.save, db).apply(undefined, [table].concat(args));
-	        },
-	        saveDoc: function saveDoc() {
-	          for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-	            args[_key8] = arguments[_key8];
-	          }
-	
-	          return rxo.fromNodeCallback(db.saveDoc, db).apply(undefined, [table].concat(args));
-	        },
-	        destroy: function destroy() {
 	          for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
 	            args[_key9] = arguments[_key9];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db.save, db).apply(undefined, [table].concat(args));
+	          });
+	        },
+	        saveDoc: function saveDoc() {
+	          for (var _len10 = arguments.length, args = Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
+	            args[_key10] = arguments[_key10];
+	          }
+	
+	          return rxo.defer(function (_) {
+	            return rxo.fromNodeCallback(db.saveDoc, db).apply(undefined, [table].concat(args));
+	          });
+	        },
+	        destroy: function destroy() {
+	          for (var _len11 = arguments.length, args = Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
+	            args[_key11] = arguments[_key11];
 	          }
 	
 	          return rxo.defer(function (_) {
@@ -162,8 +182,8 @@ require("source-map-support").install();
 	          });
 	        },
 	        searchDoc: function searchDoc() {
-	          for (var _len10 = arguments.length, args = Array(_len10), _key10 = 0; _key10 < _len10; _key10++) {
-	            args[_key10] = arguments[_key10];
+	          for (var _len12 = arguments.length, args = Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
+	            args[_key12] = arguments[_key12];
 	          }
 	
 	          return rxo.defer(function (_) {
@@ -171,8 +191,8 @@ require("source-map-support").install();
 	          });
 	        },
 	        find: function find() {
-	          for (var _len11 = arguments.length, args = Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
-	            args[_key11] = arguments[_key11];
+	          for (var _len13 = arguments.length, args = Array(_len13), _key13 = 0; _key13 < _len13; _key13++) {
+	            args[_key13] = arguments[_key13];
 	          }
 	
 	          return rxo.defer(function (_) {
@@ -180,8 +200,8 @@ require("source-map-support").install();
 	          });
 	        },
 	        findDoc: function findDoc() {
-	          for (var _len12 = arguments.length, args = Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
-	            args[_key12] = arguments[_key12];
+	          for (var _len14 = arguments.length, args = Array(_len14), _key14 = 0; _key14 < _len14; _key14++) {
+	            args[_key14] = arguments[_key14];
 	          }
 	
 	          return rxo.defer(function (_) {
@@ -189,8 +209,8 @@ require("source-map-support").install();
 	          });
 	        },
 	        where: function where() {
-	          for (var _len13 = arguments.length, args = Array(_len13), _key13 = 0; _key13 < _len13; _key13++) {
-	            args[_key13] = arguments[_key13];
+	          for (var _len15 = arguments.length, args = Array(_len15), _key15 = 0; _key15 < _len15; _key15++) {
+	            args[_key15] = arguments[_key15];
 	          }
 	
 	          return rxo.defer(function (_) {
@@ -198,8 +218,8 @@ require("source-map-support").install();
 	          });
 	        },
 	        findOne: function findOne() {
-	          for (var _len14 = arguments.length, args = Array(_len14), _key14 = 0; _key14 < _len14; _key14++) {
-	            args[_key14] = arguments[_key14];
+	          for (var _len16 = arguments.length, args = Array(_len16), _key16 = 0; _key16 < _len16; _key16++) {
+	            args[_key16] = arguments[_key16];
 	          }
 	
 	          return rxo.defer(function (_) {
