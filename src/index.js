@@ -2,8 +2,12 @@ const rx = global.Rx || require('rx');
 const rxo = rx.Observable;
 const massive = require("massive");
 
-function cb(f, ...args) {
-  return rxo.defer(_ => rxo.fromNodeCallback(f)(...args));
+function cb(f, target, ...args) {
+  return rxo.defer(_ => rxo.fromNodeCallback(f, target)(...args));
+}
+
+function cbi(f, target, ...args) {
+  return rxo.defer(_ => rxo.fromNodeCallback(f, target)(...args));
 }
 
 function upsertDoc(_this, table, searchFor, val) {
@@ -23,30 +27,46 @@ searchDoc({
 function rxify(db) {
   const api = {
     db: db,
-    run: (...args) => cb(::db.run, ...args),
-    save: (...args) => cb(::db.save, ...args),
-    saveDoc: (...args) => cb(::db.saveDoc, ...args),
-    insert: (table, ...args) => cb(::db[table].insert, ...args),
-    destroy: (table, ...args) => cb(::db[table].destroy, ...args),
-    searchDoc: (table, ...args) => cb(::db[table].searchDoc, ...args),
-    find: (table, ...args) => cb(::db[table].find, ...args),
-    findDoc: (table, ...args) => cb(::db[table].findDoc, ...args),
-    where: (table, ...args) => cb(::db[table].where, ...args),
-    findOne: (table, ...args) => cb(::db[table].findOne, ...args),
-    update: (table, ...args) => cb(::db[table].update, ...args),
-    
-    fromTable: (schema, table) => ({
+    run: (...args) => cbi(db.run, db, ...args),
+    save: (...args) => cbi(db.save, db, ...args),
+    saveDoc: (...args) => cbi(db.saveDoc, db, ...args),
+    insert: (table, ...args) => cb(db[table].insert, db[table], ...args),
+    destroy: (table, ...args) => cb(db[table].destroy, db[table], ...args),
+    searchDoc: (table, ...args) => cb(db[table].searchDoc, db[table], ...args),
+    find: (table, ...args) => cb(db[table].find, db[table], ...args),
+    findDoc: (table, ...args) => cb(db[table].findDoc, db[table], ...args),
+    where: (table, ...args) => cb(db[table].where, db[table], ...args),
+    findOne: (table, ...args) => cb(db[table].findOne, db[table], ...args),
+    update: (table, ...args) => cb(db[table].update, db[table], ...args),
+    /*
+    // Not supported
+    fromSchemaTable: (schema, table) => ({
         db: db,
-        save: (...args) => cb(::db[schema][table].save, ...args),
-        insert: (...args) => cb(::db[schema][table].insert, ...args),
-        saveDoc: (...args) => cb(::db[schema][table].saveDoc, ...args),
-        destroy: (...args) => cb(::db[schema][table].destroy, ...args),
-        searchDoc: (...args) => cb(::db[schema][table].searchDoc, ...args),
-        update: (...args) => cb(::db[schema][table].update, ...args),
-        find: (...args) => cb(::db[schema][table].find, ...args),
-        findDoc: (...args) => cb(::db[schema][table].findDoc, ...args),
-        where: (...args) => cb(::db[schema][table].where, ...args),
-        findOne: (...args) => cb(::db[schema][table].findOne, ...args)
+        save: (...args) => cbi(db[schema][table].save, db[schema][table], ...args),
+        insert: (...args) => cb(db[schema][table].insert, db[schema][table], ...args),
+        saveDoc: (...args) => cbi(db[schema][table].saveDoc, db[schema][table], ...args),
+        destroy: (...args) => cb(db[schema][table].destroy, db[schema][table], ...args),
+        searchDoc: (...args) => cb(db[schema][table].searchDoc, db[schema][table], ...args),
+        update: (...args) => cb(db[schema][table].update, db[schema][table], ...args),
+        find: (...args) => cb(db[schema][table].find, db[schema][table], ...args),
+        findDoc: (...args) => cb(db[schema][table].findDoc, db[schema][table], ...args),
+        where: (...args) => cb(db[schema][table].where, db[schema][table], ...args),
+        findOne: (...args) => cb(db[schema][table].findOne, db[schema][table], ...args)
+      }),
+    */
+
+    fromTable: (table) => ({
+        db: db,
+        save: (...args) => cb(db[table].save, db[table], ...args),
+        saveDoc: (...args) => cb(db[table].saveDoc, db[table], ...args),
+        insert: (...args) => cb(db[table].insert, db[table], ...args),
+        destroy: (...args) => cb(db[table].destroy, db[table], ...args),
+        searchDoc: (...args) => cb(db[table].searchDoc, db[table], ...args),
+        update: (...args) => cb(db[table].update, db[table], ...args),
+        find: (...args) => cb(db[table].find, db[table], ...args),
+        findDoc: (...args) => cb(db[table].findDoc, db[table], ...args),
+        where: (...args) => cb(db[table].where, db[table], ...args),
+        findOne: (...args) => cb(db[table].findOne, db[table], ...args)
       })
   };
   return api;
